@@ -2,18 +2,30 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 
-class Category(models.Model):
-    name = models.CharField(
-        max_length=255,
+#CATEGORY = (('life','生活'),('develop','開発'), ('hero','ヒーロー'),('other','その他'))
+#class Category(models.Model):
+#    name = models.CharField(
+#       max_length=255,
+#        blank=False,
+#        null=False,
+#        unique=True)
+   
+#    def __str__(self):
+ #       return self.name
+
+
+ 
+class Profile(models.Model):
+    id = models.AutoField(primary_key=True)
+    nickname = models.CharField(
+        max_length=100,
         blank=False,
         null=False,
         unique=True,
-        )
-    
+    )
+
     def __str__(self):
-        return self.name
-
-
+        return self.nickname
 
 class Post(models.Model):
     author = models.ForeignKey(
@@ -48,11 +60,12 @@ class Post(models.Model):
         blank=False,
         null=False
         )
-    category = models.ForeignKey(
-        Category,
-        default="etc",
-        on_delete=models.CASCADE)
 
 
     def __str__(self):
         return self.title
+
+
+
+
+

@@ -1,0 +1,17 @@
+{% extends "blog/base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<div class="my-4">
+    <h2>プロフィール</h2>
+</div>
+<form method="post">
+    {% csrf_token %}
+    <div class="formprofile">
+        {% render_field form.title class="form-control" placeholder="タイトルを入力" %}
+    </div>
+    
+    <button class="btn btn-warning" type="submit">登録する</button>
+</form>
+{% endblock %}
