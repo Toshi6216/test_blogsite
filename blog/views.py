@@ -52,7 +52,7 @@ class PostEditView(LoginRequiredMixin, View):
             request.POST or None,
             initial = {
                 'title' : post_data.title,
-                'content' : post_data.content,
+                'content' : post_data.content
 #                'category' : post_data.category
             }
         )
