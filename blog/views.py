@@ -37,6 +37,8 @@ class CreatePostView(View,LoginRequiredMixin):
             post_data.content = form.cleaned_data['content']
 #            post_data.category = request.category
             #post_data.nickname = request.nickname
+            if request.FILES:
+                post_data.image = request.FILES.get('image')
             post_data.save()
             return redirect('post_detail', post_data.id)
 
@@ -52,8 +54,9 @@ class PostEditView(LoginRequiredMixin, View):
             request.POST or None,
             initial = {
                 'title' : post_data.title,
-                'content' : post_data.content
+                'content' : post_data.content,
 #                'category' : post_data.category
+                'image' : post_data.image
             }
         )
         
@@ -71,6 +74,8 @@ class PostEditView(LoginRequiredMixin, View):
             post_data.content = form.cleaned_data['content']
 #            post_data.category = request.category
             #post_data.nickname = request.nickname
+            if request.FILES:
+                post_data.image = request.FILES.get('image')
             post_data.save()
             return redirect('post_detail', self.kwargs['pk'])
 
