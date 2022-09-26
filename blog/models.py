@@ -2,16 +2,16 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 
-#CATEGORY = (('life','生活'),('develop','開発'), ('hero','ヒーロー'),('other','その他'))
-#class Category(models.Model):
-#    name = models.CharField(
-#       max_length=255,
-#        blank=False,
-#        null=False,
-#        unique=True)
+
+class Category(models.Model):
+    name = models.CharField(
+        'カテゴリ',
+        max_length=100,
+        
+        )
    
-#    def __str__(self):
- #       return self.name
+    def __str__(self):
+        return self.name
 
 
  
@@ -31,7 +31,11 @@ class Post(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE)
-
+    category = models.ForeignKey(
+        Category,
+        verbose_name='カテゴリ',
+        on_delete=models.PROTECT
+    )
     title = models.CharField(
         "タイトル", 
         max_length=200,
@@ -62,7 +66,7 @@ class Post(models.Model):
         null=False)
     nickname = models.CharField(
         "ニックネーム", 
-        default=author,
+        default="other",
         max_length=200,
         blank=False,
         null=False

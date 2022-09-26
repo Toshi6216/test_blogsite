@@ -9,7 +9,7 @@
                 <img src="{{ post.image.url }}" alt="" class="card-img-top index-img">
             {% endif %}
             <div class="card-body">
-                <h2 class="card-title">{{ post.title }}</h2>
+                <h2 class="card-title">{{ post.title }}<span class="small"> - {{ post.category }}</h2>
                 <p class="card-text">{{ post.content|truncatechars:100 }}</p>
                 <div class="btn btn-warning">詳細</div>
             </div>
@@ -21,13 +21,23 @@
         {% endfor %}
     </div>
 
+<!--サイドバー-->    
     <div class="col-md-4">
         <div class="card">
-            <h5 class="card-header">カテゴリー一覧</h5>
+            <h5 class="card-header">カテゴリ一覧</h5>
             <div class="card-body">
-                {% for post in post_data %}
-                    <a href="">{{ post.category }}, </a>
+                <div class="row">
+                {% for category in category_data %}
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="{% url 'category' category %}">
+                                {{ category.name }} </a>
+                            </li>
+                        </ul>
+                    </div>
                 {% endfor %}
+                </div>
             </div>
         </div>
         <div class="card">

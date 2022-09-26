@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import *
+from .models import Post, Category, Profile
 
 
 
@@ -9,4 +9,8 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
     pass
