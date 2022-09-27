@@ -1,8 +1,9 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-<div class="row my-4">
-    <div class="col-md-8">
+<!-- <div class="row my-4"> -->
+
+    <div class="col-12">
         {% for post in post_data %}
         <div class="card mb-4">
             {% if post.image %}
@@ -20,37 +21,11 @@
         </div>
         {% endfor %}
     </div>
-
+<!-- </div> -->
 <!--サイドバー-->    
-    <div class="col-md-4">
-        <div class="card">
-            <h5 class="card-header">カテゴリ一覧</h5>
-            <div class="card-body">
-                <div class="row">
-                {% for category in category_data %}
-                    <div class="col-md-6">
-                        <ul class="list-unstyled">
-                            <li>
-                                <a href="{% url 'category' category %}">
-                                {{ category.name }} </a>
-                            </li>
-                        </ul>
-                    </div>
-                {% endfor %}
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <h5 class="card-header">blogリスト</h5>
-            <div class="card-body">
-                {% for post in post_data %}
-                    <a href=""> {{ post.title }}</a><br>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+    
 
-</div>
+
 <p><a href="{% url 'test' %}" >test</a></p>
 <!-- <p><a href="{% url 'choice' %}" >choice</a></p> -->
 

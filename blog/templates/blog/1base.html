@@ -55,46 +55,10 @@
     
 
     <main>
-
-    <div class="container">
-        <div class="row my-4">
-            <div class="col-md-8">
-
+        <div class="container">
             {% block content %}
             {% endblock %}
-
-            </div>
-
-            <div class="col-md-4">
-                <div class="card">
-                    <h5 class="card-header">カテゴリ一覧</h5>
-                    <div class="card-body">
-                        <div class="row">
-                        {% for category in category_data %}
-                            <div class="col-md-6">
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a href="{% url 'category' category %}">
-                                        {{ category.name }} </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <h5 class="card-header">blogリスト</h5>
-                    <div class="card-body">
-                        {% for post in posts_data %}
-                            <a href="{% url 'post_detail' post.id %}"> {{ post.title }}</a><br>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-
         </div>
-    </div>
     </main>
 
     <footer class="py-2 bg-dark">
