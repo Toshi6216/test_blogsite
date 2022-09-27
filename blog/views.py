@@ -28,7 +28,6 @@ class CreatePostView(View,LoginRequiredMixin):
 
     def post(self, request, *args, **kwargs):
         form = PostForm(request.POST or None)
-#        category = Category(request.POST or None)
 
         if form.is_valid():
             post_data = Post()
@@ -68,7 +67,6 @@ class PostEditView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         form = PostForm(request.POST or None)
-#        category = Category(request.POST or None)
 
         if form.is_valid():
             post_data = Post.objects.get(id=self.kwargs['pk'])
@@ -112,6 +110,14 @@ class CategoryView(View):
         })
 
 
+
+class TestDetailView(View):
+    def get(self, request, *args, **kwargs):
+        post_data = Post.objects.get(id=self.kwargs['pk'])
+        return render(request, 'test_detail.html',{
+            'post_data': post_data
+        })
+
 class BlogTestView(TemplateView):
     template_name = "test.html"
 
@@ -122,20 +128,5 @@ class BlogTestView(TemplateView):
         })
 
 
-class SampleChoiceAddView(View):
-    def get(self, request):
-        form_1 = forms.SampleChoiceAddForm()
 
-        form_1.fields['choice_1'].choices =[
-            ('hokkaido', '北海道'),
-            ('touhoku', '東北'),
-            ('kantou', '関東'),
-            ('hokuriku','北陸'),
-            ('toukai', '東海'),
-        ]
-        context = {
-            'form': form_1
-        }
-        return render(request, 'choice_sample.html', context)
-sample_choice_add_view = SampleChoiceAddView.as_view()
 
