@@ -1,43 +1,48 @@
 from django.shortcuts import render,  redirect
 from django.views.generic import View, TemplateView
-from .models import Post, Category, Profile
+from .models import Post, Category
 from .forms import PostForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from . import forms
 
+#TopページのIndexページのview
 class IndexView(View):
+    #このviewがコールされたら最初にget関数が呼ばれる
     def get(self, request, *args, **kwargs):
-        post_data = Post.objects.order_by('-id')
+        post_data = Post.objects.order_by('-id') #新しいものから順番に並べる
         return render(request, 'blog/index.html',{
             'post_data': post_data
         })
 
+#記事詳細画面のview
 class PostDetailView(View):
     def get(self, request, *args, **kwargs):
-        post_data = Post.objects.get(id=self.kwargs['pk'])
+        post_data = Post.objects.get(id=self.kwargs['pk']) #pkで記事を特定してデータ取得
         return render(request, 'blog/post_detail.html',{
             'post_data': post_data
         })
 
+#記事投稿のview
 class CreatePostView(View,LoginRequiredMixin):
     def get(self, request, *args, **kwargs):
         form = PostForm(request.POST or None)
         return render(request, 'blog/post_form.html',{
-            'form': form
+            'form': form #投稿フォームを返す
         })
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs): #投稿内容をデータベースに保存
         form = PostForm(request.POST or None)
 
+        #フォームのバリデーション
         if form.is_valid():
             post_data = Post()
             post_data.author = request.user
             post_data.title = form.cleaned_data['title']
-            category = form.cleaned_data['category']
-            category_data = Category.objects.get(name=category)
+            category = form.cleaned_data['category'] #一旦formのカテゴリデータを格納
+            category_data = Category.objects.get(name=category) #カテゴリをCategoryモデルから取得
             post_data.category = category_data
             post_data.content = form.cleaned_data['content']
-            #post_data.nickname = request.nickname
+            
             if request.FILES:
                 post_data.image = request.FILES.get('image')
             post_data.save()
@@ -48,6 +53,7 @@ class CreatePostView(View,LoginRequiredMixin):
             'form': form
         })
 
+#編集画面のview
 class PostEditView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         post_data = Post.objects.get(id=self.kwargs['pk'])
@@ -75,7 +81,7 @@ class PostEditView(LoginRequiredMixin, View):
             category_data = Category.objects.get(name=category)
             post_data.category = category_data
             post_data.content = form.cleaned_data['content']
-            #post_data.nickname = request.nickname
+           
             if request.FILES:
                 post_data.image = request.FILES.get('image')
             post_data.save()
@@ -86,6 +92,7 @@ class PostEditView(LoginRequiredMixin, View):
             'form': form
         })
 
+#投稿削除のview
 class PostDeleteView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         post_data = Post.objects.get(id=self.kwargs['pk'])
@@ -98,7 +105,7 @@ class PostDeleteView(LoginRequiredMixin, View):
         post_data.delete()
         return redirect('index')
 
-
+#カテゴリごとに記事をまとめたview
 class CategoryView(View):
     def get(self, request, *args, **kwargs):
         category_data = Category.objects.get(
@@ -110,6 +117,7 @@ class CategoryView(View):
         })
 
 
+# ___ここから下はお試し用____
 
 class TestDetailView(View):
     def get(self, request, *args, **kwargs):

@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 
-
+#カテゴリのモデル
 class Category(models.Model):
     name = models.CharField(
         'カテゴリ',
@@ -14,8 +14,8 @@ class Category(models.Model):
         return self.name
 
 
- 
-class Profile(models.Model):
+#ニックネーム設定用モデル
+class Nickname(models.Model):
     id = models.AutoField(primary_key=True)
     nickname = models.CharField(
         max_length=100,
@@ -27,6 +27,7 @@ class Profile(models.Model):
     def __str__(self):
         return self.nickname
 
+#投稿記事のモデル
 class Post(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -64,18 +65,11 @@ class Post(models.Model):
         editable=False,
         blank=False,
         null=False)
-    nickname = models.CharField(
-        "ニックネーム", 
-        default="other",
-        max_length=200,
-        blank=False,
-        null=False
-        )
+    
 
 
     def __str__(self):
         return self.title
-
 
 
 
