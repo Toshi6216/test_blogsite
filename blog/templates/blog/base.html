@@ -74,8 +74,8 @@
                         <div class="row">
                         {% for category in category_data %}
 
-                                        <button class="btn btn-info m-2" href="{% url 'category' category %}">
-                                        {{ category.name }} </button>
+                                <a class="btn btn-info m-2" href="{% url 'category' category %}">
+                                {{ category.name }} </a>
 
                         {% endfor %}
                         </div>
