@@ -17,6 +17,17 @@
         <hr>
     {% endif %}
     <p>{{ post_data.content|linebreaksbr }}</p>
+    <hr>
+    {% for card in post_data.contentcard.all %}
+        
+        {% if card.image %}
+            <img src="{{ card.image.url }}" alt="" class="rounded detail-img">
+            <hr>
+        {% endif %}
+        <p>{{ card.content }}</p>
+
+    {% endfor %}
+
     {% if user.is_authenticated %}
         <hr>
         <div class="d-flex mb-5">

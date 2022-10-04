@@ -72,5 +72,18 @@ class Post(models.Model):
         return self.title
 
 
+class ContentCard(models.Model):
+    content = models.TextField()
+    image = models.ImageField(
+        upload_to='images', 
+        verbose_name='イメージ画像', 
+        null=True,
+        blank=True
+    )
+    post = models.ForeignKey(
+        Post,
+        related_name = "contentcard",
+        on_delete = models.CASCADE
+    )
 
 
