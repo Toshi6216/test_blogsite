@@ -1,5 +1,5 @@
 from django import forms
-from .models import Category
+from .models import Category 
 
 class PostForm(forms.Form):
     category_data = Category.objects.all()

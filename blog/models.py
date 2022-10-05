@@ -2,12 +2,12 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 
+
 #カテゴリのモデル
 class Category(models.Model):
     name = models.CharField(
         'カテゴリ',
-        max_length=100,
-        
+        max_length=100,        
         )
    
     def __str__(self):
@@ -32,11 +32,13 @@ class Post(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE)
+
     category = models.ForeignKey(
         Category,
-        verbose_name='カテゴリ',
+        verbose_name='カテゴリ',       
         on_delete=models.PROTECT
     )
+
     title = models.CharField(
         "タイトル", 
         max_length=200,

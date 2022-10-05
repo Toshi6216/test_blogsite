@@ -9,6 +9,5 @@ def common(request):
         'category_data' : category_data,
         'posts_data' : posts_data,
         
-
     }
     return context
