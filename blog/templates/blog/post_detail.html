@@ -18,15 +18,18 @@
     {% endif %}
     <p>{{ post_data.content|linebreaksbr }}</p>
     <hr>
+
+    <!--本文とimgのセット-->
     {% for card in post_data.contentcard.all %}
         
         {% if card.image %}
             <img src="{{ card.image.url }}" alt="" class="rounded detail-img">
-            <hr>
+            
         {% endif %}
         <p>{{ card.content }}</p>
-
+    <hr>
     {% endfor %}
+    <!--ここまで-->
 
     {% if user.is_authenticated %}
         <hr>

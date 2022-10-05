@@ -66,12 +66,10 @@ class Post(models.Model):
         blank=False,
         null=False)
     
-
-
     def __str__(self):
         return self.title
 
-
+#本文とimgのセット
 class ContentCard(models.Model):
     content = models.TextField()
     image = models.ImageField(
