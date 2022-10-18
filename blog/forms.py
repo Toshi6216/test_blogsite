@@ -1,28 +1,32 @@
 from django import forms
-from .models import Category 
+from .models import * 
 
-class PostForm(forms.Form):
-    category_data = Category.objects.all()
-    category_choice = {}
-    for category in category_data:
-        category_choice[category] = category
-
-    title = forms.CharField(max_length=30, label='タイトル')
-    category = forms.ChoiceField(
-        label='カテゴリ', 
-        widget=forms.Select,
-        choices=list(category_choice.items())
-        )
-    content = forms.CharField(label='内容', widget=forms.Textarea())
-    image = forms.ImageField(label='イメージ画像', required=False)
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
     
+        fields = '__all__'
+    #    fields = ('title', 'category')
 
+        
+class ContentCardForm(forms.ModelForm):  #コンテンツカードのフォーム追加
+    class Meta:
+        model = ContentCard
+        fields = '__all__'
+   
+
+#ブログ　インラインフォームセット
+CardFormset = forms.inlineformset_factory(
+    Post, ContentCard, fields='__all__',
+    form=ContentCardForm,  #追加したフォームを渡す
+    extra=1,  can_delete=False
+)
+
+#以下参考
 
 class SampleChoiceAddForm(forms.Form):
     choice_1 = forms.ChoiceField(
-        
         required=True,
         widget=forms.widgets.Select(),
         label='地域'
     )
-

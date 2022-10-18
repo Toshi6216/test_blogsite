@@ -1,9 +1,11 @@
+from multiprocessing import get_context
 from django.shortcuts import render,  redirect
-from django.views.generic import View, TemplateView
-from .models import Post, Category
-from .forms import PostForm
+from django.views.generic import View, TemplateView, CreateView
+from .models import *
+from .forms import *
 from django.contrib.auth.mixins import LoginRequiredMixin
 from . import forms
+from django.urls import reverse
 
 #TopページのIndexページのview
 class IndexView(View):
@@ -23,35 +25,43 @@ class PostDetailView(View):
         })
 
 #記事投稿のview
-class CreatePostView(View,LoginRequiredMixin):
-    def get(self, request, *args, **kwargs):
-        form = PostForm(request.POST or None)
-        return render(request, 'blog/post_form.html',{
-            'form': form #投稿フォームを返す
-        })
+class CreatePostView(LoginRequiredMixin, CreateView):
+    template_name = 'blog/post_form.html'
+    form_class = PostForm
 
-    def post(self, request, *args, **kwargs): #投稿内容をデータベースに保存
-        form = PostForm(request.POST or None)
+    def get_success_url(self): 
+        return reverse("index") #入力フォーム内容がセーブできた時の遷移先
 
-        #フォームのバリデーション
-        if form.is_valid():
-            post_data = Post()
-            post_data.author = request.user
-            post_data.title = form.cleaned_data['title']
-            category = form.cleaned_data['category'] #一旦formのカテゴリデータを格納
-            category_data = Category.objects.get(name=category) #カテゴリをCategoryモデルから取得
-            post_data.category = category_data
-            post_data.content = form.cleaned_data['content']
-            
-            if request.FILES:
-                post_data.image = request.FILES.get('image')
-            post_data.save()
-            return redirect('post_detail', post_data.id)
+    def get_context_data(self, **kwargs):
+        ctx=super().get_context_data(**kwargs) #オーバーライド前のget_context_dataで返されるオブジェクトを格納
+
+        if self.request.method=="POST": #"POST"が呼び出されたときの処理
+            post_formset = self.request.POST.copy() #request.POSTをコピーして変数に格納
+            files = self.request.FILES  #FILESを変数に格納
+            post_formset['contentcard-TOTAL_FORMS']=1 #フォームの数 formsetを使う場合必須
+            post_formset['contentcard-INITIAL_FORMS']=0 #formsetを使う場合必須
+            ctx["blog_formset"] = CardFormset(post_formset, files) #変数をフォームセットに渡す
+        else:
+            ctx["blog_formset"] = CardFormset()
+
+        return ctx
+   
+
+    def form_valid(self, form):
+        ctx = self.get_context_data()
+        blog_formset = ctx["blog_formset"]
+
+        if blog_formset.is_valid():
+            self.object=form.save()
+            blog_formset.instance = self.object
+            blog_formset.save()
+            return redirect(self.get_success_url())
+
+        else:
+            ctx["form"] = form
+            return self.render_to_response(ctx)
 
 
-        return render(request, 'blog/post_form.html',{
-            'form': form
-        })
 
 #編集画面のview
 class PostEditView(LoginRequiredMixin, View):

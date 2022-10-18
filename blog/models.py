@@ -1,3 +1,4 @@
+from cProfile import Profile
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -68,6 +69,7 @@ class Post(models.Model):
         blank=False,
         null=False)
     
+    
     def __str__(self):
         return self.title
 
@@ -81,9 +83,11 @@ class ContentCard(models.Model):
         blank=True
     )
     post = models.ForeignKey(
-        Post,
+        Post, verbose_name = '紐づく記事',
         related_name = "contentcard",
         on_delete = models.CASCADE
     )
+    def __str__(self):
+        return self.post.title
 
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Category, ContentCard
+from .models import Nickname, Post, Category, ContentCard
 
 
 
@@ -16,4 +16,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(ContentCard)
 class ContentCardAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Nickname)
+class NicknameAdmin(admin.ModelAdmin):
     pass
