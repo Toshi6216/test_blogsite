@@ -4,9 +4,7 @@ from .models import *
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-    
-        fields = '__all__'
-    #    fields = ('title', 'category')
+        fields = ('title', 'category')
 
         
 class ContentCardForm(forms.ModelForm):  #コンテンツカードのフォーム追加

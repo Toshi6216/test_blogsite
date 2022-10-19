@@ -10,10 +10,7 @@
     {% csrf_token %}
     {{ formset.management_form }}
 
-    <div class="formpost">
-        {% render_field form.author class="form-control" placeholder="タイトルを入力" %}
-    </div>
-    
+   
     <div class="formpost">
         {% render_field form.title class="form-control" placeholder="タイトルを入力" %}
     </div>

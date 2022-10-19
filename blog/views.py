@@ -52,7 +52,9 @@ class CreatePostView(LoginRequiredMixin, CreateView):
         blog_formset = ctx["blog_formset"]
 
         if blog_formset.is_valid():
-            self.object=form.save()
+            self.object=form.save(commit=False)
+            self.object.author=self.request.user
+            self.object.save()
             blog_formset.instance = self.object
             blog_formset.save()
             return redirect(self.get_success_url())
