@@ -43,6 +43,7 @@ class CreatePostView(LoginRequiredMixin, CreateView):
             ctx["blog_formset"] = CardFormset(post_formset, files) #変数をフォームセットに渡す
         else:
             ctx["blog_formset"] = CardFormset()
+            CardFormset.extra=1
 
         return ctx
    
@@ -63,8 +64,48 @@ class CreatePostView(LoginRequiredMixin, CreateView):
             ctx["form"] = form
             return self.render_to_response(ctx)
 
+#編集画面のview
+class PostEditView(LoginRequiredMixin, CreateView):
+    template_name = 'blog/post_form.html'
+    form_class = PostForm
 
+    def get_success_url(self): 
+        return reverse("index") #入力フォーム内容がセーブできた時の遷移先
+    def get_context_data(self, **kwargs):
+        ctx=super().get_context_data(**kwargs) #オーバーライド前のget_context_dataで返されるオブジェクトを格納
+        postdata = Post.objects.get(pk=self.kwargs["pk"]) #紐づけされる記事を指定
+        
+        if self.request.method=="POST": #"POST"が呼び出されたときの処理
+            post_formset = self.request.POST.copy() #request.POSTをコピーして変数に格納
+            files = self.request.FILES  #FILESを変数に格納
+            post_formset['contentcard-TOTAL_FORMS']=1 #フォームの数 formsetを使う場合必須
+            post_formset['contentcard-INITIAL_FORMS']=0 #formsetを使う場合必須
+            ctx["blog_formset"] = CardFormset(post_formset, files) #変数をフォームセットに渡す
+        else:
+            ctx["blog_formset"] = CardFormset(instance=postdata) #各フォームに初期データを入れる
+            CardFormset.extra=0
+            print(CardFormset.extra)
+            ctx["form"] = PostForm(instance=postdata) #各フォームに初期データを入れる
+        return ctx
+   
+    def form_valid(self, form):
+        print(self.object)
+        ctx = self.get_context_data()
+        blog_formset = ctx["blog_formset"]
 
+        if blog_formset.is_valid():
+            self.object=form.save(commit=False)
+            self.object.author=self.request.user
+            self.object.save()
+            blog_formset.instance = self.object
+            blog_formset.save()
+            return redirect(self.get_success_url())
+
+        else:
+            ctx["form"] = form
+            return self.render_to_response(ctx)
+            
+"""
 #編集画面のview
 class PostEditView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -103,6 +144,7 @@ class PostEditView(LoginRequiredMixin, View):
         return render(request, 'blog/post_form.html',{
             'form': form
         })
+"""
 
 #投稿削除のview
 class PostDeleteView(LoginRequiredMixin, View):
