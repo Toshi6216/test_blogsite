@@ -77,25 +77,25 @@ class PostEditView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         print("get_context_data 最初")
 
-        CardFormset.extra=0 #新規の欄を削除
-    
-    #    files = self.request.FILES  #FILESを変数に格納
-
         ctx=super(PostEditView, self).get_context_data(**kwargs) #オーバーライド前のget_context_dataで返されるオブジェクトを格納
-        print("ctx super")
-        print(ctx)
-        ctx.update(dict(blog_formset=CardFormset(self.request.POST or None,   instance=self.object)))
         
-        print("ctx update後")
-        print(ctx)
-        return ctx
+        if self.request.method=="POST": #"POST"が呼び出されたときの処理
+            files = self.request.FILES  #FILESを変数に格納
+            ctx.update(dict(blog_formset=CardFormset(self.request.POST or None, files = files,  instance=self.object)))
 
+        else: 
+            ctx.update(dict(blog_formset=CardFormset(self.request.POST or None, instance=self.object)))
+
+            CardFormset.extra=0
+        
+        return ctx
 
     def form_valid(self, form):
         ctx = self.get_context_data()
         blog_formset = ctx["blog_formset"]
-
+        print("ccccccc")
         if blog_formset.is_valid():
+            print("bbbbbbbb")
             self.object=form.save(commit=False)
             
             self.object.save()
@@ -105,6 +105,7 @@ class PostEditView(LoginRequiredMixin, UpdateView):
 
         else:
             ctx["form"] = form
+            print("aaaaaa")
             return self.render_to_response(ctx)
  
 
