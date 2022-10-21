@@ -106,21 +106,7 @@ class PostEditView(LoginRequiredMixin, UpdateView):
         else:
             ctx["form"] = form
             return self.render_to_response(ctx)
-        print(self.object)
-        ctx = self.get_context_data()
-        blog_formset = ctx["blog_formset"]
-
-        if blog_formset.is_valid():
-            self.object=form.save(commit=False)
-            self.object.author=self.request.user
-            self.object.save()
-            blog_formset.instance = self.object
-            blog_formset.save()
-            return redirect(self.get_success_url())
-
-        else:
-            ctx["form"] = form
-            return self.render_to_response(ctx)
+ 
 
             
 """
