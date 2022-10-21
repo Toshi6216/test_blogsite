@@ -1,6 +1,6 @@
 from multiprocessing import get_context
 from django.shortcuts import render,  redirect
-from django.views.generic import View, TemplateView, CreateView
+from django.views.generic import View, TemplateView, CreateView, UpdateView
 from .models import *
 from .forms import *
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -65,30 +65,47 @@ class CreatePostView(LoginRequiredMixin, CreateView):
             return self.render_to_response(ctx)
 
 #編集画面のview
-class PostEditView(LoginRequiredMixin, CreateView):
+class PostEditView(LoginRequiredMixin, UpdateView):
+    model = Post
     template_name = 'blog/post_form.html'
     form_class = PostForm
-
+    
+    print("クラス直下")
     def get_success_url(self): 
         return reverse("index") #入力フォーム内容がセーブできた時の遷移先
+
     def get_context_data(self, **kwargs):
-        ctx=super().get_context_data(**kwargs) #オーバーライド前のget_context_dataで返されるオブジェクトを格納
-        postdata = Post.objects.get(pk=self.kwargs["pk"]) #紐づけされる記事を指定
+        print("get_context_data 最初")
+
+        CardFormset.extra=0 #新規の欄を削除
+    
+    #    files = self.request.FILES  #FILESを変数に格納
+
+        ctx=super(PostEditView, self).get_context_data(**kwargs) #オーバーライド前のget_context_dataで返されるオブジェクトを格納
+        print("ctx super")
+        print(ctx)
+        ctx.update(dict(blog_formset=CardFormset(self.request.POST or None,   instance=self.object)))
         
-        if self.request.method=="POST": #"POST"が呼び出されたときの処理
-            post_formset = self.request.POST.copy() #request.POSTをコピーして変数に格納
-            files = self.request.FILES  #FILESを変数に格納
-            post_formset['contentcard-TOTAL_FORMS']=1 #フォームの数 formsetを使う場合必須
-            post_formset['contentcard-INITIAL_FORMS']=0 #formsetを使う場合必須
-            ctx["blog_formset"] = CardFormset(post_formset, files) #変数をフォームセットに渡す
-        else:
-            ctx["blog_formset"] = CardFormset(instance=postdata) #各フォームに初期データを入れる
-            CardFormset.extra=0
-            print(CardFormset.extra)
-            ctx["form"] = PostForm(instance=postdata) #各フォームに初期データを入れる
+        print("ctx update後")
+        print(ctx)
         return ctx
-   
+
+
     def form_valid(self, form):
+        ctx = self.get_context_data()
+        blog_formset = ctx["blog_formset"]
+
+        if blog_formset.is_valid():
+            self.object=form.save(commit=False)
+            
+            self.object.save()
+            
+            blog_formset.save()
+            return redirect(self.get_success_url())
+
+        else:
+            ctx["form"] = form
+            return self.render_to_response(ctx)
         print(self.object)
         ctx = self.get_context_data()
         blog_formset = ctx["blog_formset"]
@@ -104,6 +121,7 @@ class PostEditView(LoginRequiredMixin, CreateView):
         else:
             ctx["form"] = form
             return self.render_to_response(ctx)
+
             
 """
 #編集画面のview
