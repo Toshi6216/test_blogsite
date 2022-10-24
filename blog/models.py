@@ -2,7 +2,15 @@ from cProfile import Profile
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
+MAX_SIZE    = 2 * 1000 * 1000
+
+def validate_max_size(value):
+    if value.size > MAX_SIZE:
+        raise ValidationError( "ファイルサイズが上限(" + str(MAX_SIZE/1000000) + "MB)を超えています。送信されたファイルサイズ: " + str(value.size/1000000) + "MB")
+    else:
+        print("問題なし")
 
 #カテゴリのモデル
 class Category(models.Model):
@@ -80,7 +88,8 @@ class ContentCard(models.Model):
         upload_to='images', 
         verbose_name='イメージ画像', 
         null=True,
-        blank=True
+        blank=True,
+        validators=[validate_max_size],
     )
     post = models.ForeignKey(
         Post, verbose_name = '紐づく記事',
