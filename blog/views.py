@@ -1,6 +1,6 @@
 from multiprocessing import get_context
 from django.shortcuts import render,  redirect
-from django.views.generic import View, TemplateView, CreateView, UpdateView
+from django.views.generic import View, TemplateView, CreateView, UpdateView, ListView
 from .models import *
 from .forms import *
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,13 +8,21 @@ from . import forms
 from django.urls import reverse
 
 #TopページのIndexページのview
-class IndexView(View):
-    #このviewがコールされたら最初にget関数が呼ばれる
-    def get(self, request, *args, **kwargs):
-        post_data = Post.objects.order_by('-id') #新しいものから順番に並べる
-        return render(request, 'blog/index.html',{
-            'post_data': post_data
-        })
+class IndexView(ListView):
+    model = Post
+    template_name = 'blog/index.html'
+    queryset = Post.objects.order_by('-created')
+    context_object_name = 'post_data'
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+        card = ContentCard.objects.all
+        print("card")
+        print(card)
+        ctx['blog_card'] = card
+        
+        print(ctx['blog_card'])
+        return ctx
 
 #記事詳細画面のview
 class PostDetailView(View):
@@ -70,7 +78,6 @@ class PostEditView(LoginRequiredMixin, UpdateView):
     template_name = 'blog/post_form.html'
     form_class = PostForm
     
-    print("クラス直下")
     def get_success_url(self): 
         return reverse("index") #入力フォーム内容がセーブできた時の遷移先
 
@@ -85,7 +92,6 @@ class PostEditView(LoginRequiredMixin, UpdateView):
 
         else: 
             ctx.update(dict(blog_formset=CardFormset(self.request.POST or None, instance=self.object)))
-
             CardFormset.extra=0
         
         return ctx
@@ -93,63 +99,19 @@ class PostEditView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         ctx = self.get_context_data()
         blog_formset = ctx["blog_formset"]
-        print("ccccccc")
+
         if blog_formset.is_valid():
-            print("bbbbbbbb")
             self.object=form.save(commit=False)
-            
-            self.object.save()
-            
+            self.object.save()  
             blog_formset.save()
             return redirect(self.get_success_url())
 
         else:
             ctx["form"] = form
-            print("aaaaaa")
             return self.render_to_response(ctx)
  
 
-            
-"""
-#編集画面のview
-class PostEditView(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        post_data = Post.objects.get(id=self.kwargs['pk'])
-        form = PostForm(
-            request.POST or None,
-            initial = {
-                'title' : post_data.title,
-                'category' : post_data.category,
-                'content' : post_data.content,
-                'image' : post_data.image
-            }
-        )
-        
-        return render(request, 'blog/post_form.html',{
-            'form': form
-        })
-
-    def post(self, request, *args, **kwargs):
-        form = PostForm(request.POST or None)
-
-        if form.is_valid():
-            post_data = Post.objects.get(id=self.kwargs['pk'])
-            post_data.title = form.cleaned_data['title']
-            category = form.cleaned_data['category']
-            category_data = Category.objects.get(name=category)
-            post_data.category = category_data
-            post_data.content = form.cleaned_data['content']
-           
-            if request.FILES:
-                post_data.image = request.FILES.get('image')
-            post_data.save()
-            return redirect('post_detail', self.kwargs['pk'])
-
-
-        return render(request, 'blog/post_form.html',{
-            'form': form
-        })
-"""
+ 
 
 #投稿削除のview
 class PostDeleteView(LoginRequiredMixin, View):

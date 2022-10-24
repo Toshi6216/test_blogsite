@@ -3,7 +3,7 @@
 {% block content %}
 
     <div class="col-12">
-
+{{ formset.management_form }}
 {% for post in post_data %}
 <div class="card mb-3 col-lg-auto" style="">
   <div class="row no-gutters">
@@ -11,7 +11,11 @@
     <div class="col-md-8">
       <div class="card-body">
         <h5 class="card-title">#{{ post.id }}/{{ post.title }}<span class="small"> - {{ post.category }}</h5>
-        <p class="card-text">{{ post.content|truncatechars:100 }}</p>
+        
+        {% for card in post.contentcard.all %}
+          <p>{{ card.content |truncatechars:20}}</p>
+          
+        {% endfor %}
         <p class="card-text"><small class="text-muted">{{ post.created|date }} by {{ post.author }}</small></p>
         
       </div>
@@ -19,9 +23,12 @@
 
     <div class="col-md-4">
         <div class="btn btn-warning m-2 btn-detail">詳細</div>
-        {% if post.image %}
-            <img src="{{ post.image.url }}" alt="" class="card-img-top index-img">
-        {% endif %}
+        {% for card in post.contentcard.all %}
+          
+          {% if card.image %}
+          <img src="{{ card.image.url }}" alt="" class="card-img-top index-img">
+          {% endif %}
+        {% endfor %}
         
     </div>
     <a href="{% url 'post_detail' post.id %}" class="stretched-link"></a>
@@ -31,7 +38,10 @@
     </div>
 
 
-<p><a href="{% url 'test' %}" >test</a></p>
-  
+{% if user.is_authenticated %}
+   <p><a href="{% url 'test' %}" >test</a></p>     
+    
+{% endif %}
+
 
 {% endblock %}
