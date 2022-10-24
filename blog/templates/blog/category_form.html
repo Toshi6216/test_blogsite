@@ -1,0 +1,26 @@
+  {% extends 'blog/base.html' %}
+
+
+  {% block content %}
+
+  <div class="col-12">
+    <div class="card mb-3 col-lg-auto" style="">
+      <div>
+        <h1>カテゴリ追加</h1>
+        
+      </div>
+      {% for category in category_list %}
+        
+          {{ category.name }}, 
+
+      {% endfor %}
+
+      <hr/>
+      <form method="POST" class="post-form">{% csrf_token %}
+        <p><input type="text" name="name" maxlength="100"></p>
+        
+        <p><button type="submit">Save</button></p>
+      </form>
+  </div>
+</div>
+{% endblock %}

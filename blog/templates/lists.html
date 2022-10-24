@@ -1,0 +1,16 @@
+  <div>
+    <h1>List Page</h1>
+    <p><a href="{% url 'index' %}" >blogにもどる</a></p>   
+  </div>
+  {% for sample in sample_list %}
+    <div>
+      <p>{{ sample.name }}</p>
+    </div>
+  {% endfor %}
+
+  <hr/>
+  <form method="POST" class="post-form">{% csrf_token %}
+    <input type="text" name="name" maxlength="100"></br>
+    
+    <button type="submit">Save</button>
+  </form>

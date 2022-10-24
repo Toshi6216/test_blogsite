@@ -110,6 +110,19 @@ class PostEditView(LoginRequiredMixin, UpdateView):
             ctx["form"] = form
             return self.render_to_response(ctx)
  
+def categoryFormView(request):
+    category_list = Category.objects.all()
+    form = CategoryForm(request.POST or None)
+    context = {
+        'category_list':category_list,
+        'form':form,
+    }
+    if request.method == 'POST':
+        if form.is_valid():
+            Category.objects.create(**form.cleaned_data)
+            return render(request, 'blog/category_form.html', context)
+    return render(request, 'blog/category_form.html', context)
+
 
  
 
@@ -156,6 +169,23 @@ class BlogTestView(TemplateView):
             'post_data': post_data
         })
 
+
+def lists(request):
+    sample_list = Category.objects.all()
+    form = CategoryForm(request.POST or None)
+    context = {
+        'sample_list':sample_list,
+        'form':form,
+    }
+    if request.method == 'POST':
+        if form.is_valid():
+
+            # create()の場合
+            Category.objects.create(**form.cleaned_data)
+
+           
+            return render(request, 'lists.html', context)
+    return render(request, 'lists.html', context)
 
 
 

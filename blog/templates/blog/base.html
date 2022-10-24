@@ -70,6 +70,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <h5 class="card-header">カテゴリ一覧</h5>
+                    <a href="{% url 'category_form' %}" class="btn btn-primary m-2">カテゴリを追加</a>
                     <div class="card-body">
                         <div class="row">
                         {% for category in category_data %}
@@ -86,6 +87,7 @@
                     <div class="card-body">
                         {% for post in posts_data %}
                             <a href="{% url 'post_detail' post.id %}"> {{ post.title }} </a>
+                            <p>{{ post.contentcard.content }}</p>
                             <p class="">({{ post.created|date }})</p><br>
                         {% endfor %}
                     </div>

@@ -3,6 +3,7 @@ from blog import views
 
 urlpatterns = [
     path('blog/', views.IndexView.as_view(), name='index'),
+    path('category_form/', views.categoryFormView, name='category_form'),
     path('post/<int:pk>/detail/', views.PostDetailView.as_view(), name='post_detail'),
     path('post/new/', views.CreatePostView.as_view(), name='post_new'),
     path('post/<int:pk>/edit/', views.PostEditView.as_view(), name='post_edit'),
@@ -11,4 +12,5 @@ urlpatterns = [
 
     path('test/<int:pk>/detail/', views.TestDetailView.as_view(), name='test_detail'),
     path('test/', views.BlogTestView.as_view(), name='test'),
+    path('sample/', views.lists, name='lists'),
 ]

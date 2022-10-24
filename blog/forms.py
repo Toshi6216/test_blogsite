@@ -28,3 +28,8 @@ class SampleChoiceAddForm(forms.Form):
         widget=forms.widgets.Select(),
         label='地域'
     )
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = {'name',}
