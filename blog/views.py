@@ -1,11 +1,40 @@
 from multiprocessing import get_context
-from django.shortcuts import render,  redirect
+from django.shortcuts import render,  redirect, get_object_or_404
 from django.views.generic import View, TemplateView, CreateView, UpdateView, ListView
 from .models import *
 from .forms import *
 from django.contrib.auth.mixins import LoginRequiredMixin
 from . import forms
 from django.urls import reverse
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, logout
+
+
+#def signup_view(request):
+#    if request.method == 'POST':
+#
+#        user_form = SignupForm(request.POST)
+#        profile_form = ProfileForm(request.POST)
+#        forms = (user_form, profile_form)
+#
+#        if user_form.is_valid() and profile_form.is_valid:
+#            user = user_form.save(commit=False)
+#            nickname = profile_form.save(commit=False)
+#            nickname.user = user
+#            user.nickname.save()
+#            login(request, user)
+#            return redirect('/blog/')
+#
+#    else:
+#        forms = (SignupForm(), ProfileForm())
+#
+#    param = {
+#        'forms': forms
+#    }
+#    return render(request, 'blog/signup_form.html', param)
+
+
 
 #TopページのIndexページのview
 class IndexView(ListView):
@@ -82,7 +111,6 @@ class PostEditView(LoginRequiredMixin, UpdateView):
         return reverse("index") #入力フォーム内容がセーブできた時の遷移先
 
     def get_context_data(self, **kwargs):
-        print("get_context_data 最初")
 
         ctx=super(PostEditView, self).get_context_data(**kwargs) #オーバーライド前のget_context_dataで返されるオブジェクトを格納
         
@@ -109,7 +137,8 @@ class PostEditView(LoginRequiredMixin, UpdateView):
         else:
             ctx["form"] = form
             return self.render_to_response(ctx)
- 
+
+
 def categoryFormView(request):
     category_list = Category.objects.all()
     form = CategoryForm(request.POST or None)
@@ -124,9 +153,9 @@ def categoryFormView(request):
     return render(request, 'blog/category_form.html', context)
 
 
- 
 
 #投稿削除のview
+
 class PostDeleteView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         post_data = Post.objects.get(id=self.kwargs['pk'])

@@ -1,5 +1,11 @@
 from django import forms
 from .models import * 
+from django.contrib.auth.forms import UserCreationForm
+from django.conf import settings
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -20,6 +26,13 @@ CardFormset = forms.inlineformset_factory(
     extra=1,  can_delete=False
 )
 
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = {'name',}
+
+
+
 #以下参考
 
 class SampleChoiceAddForm(forms.Form):
@@ -29,7 +42,3 @@ class SampleChoiceAddForm(forms.Form):
         label='地域'
     )
 
-class CategoryForm(forms.ModelForm):
-    class Meta:
-        model = Category
-        fields = {'name',}
