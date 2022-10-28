@@ -95,7 +95,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-import dj_database_url
+##MySQLの設定
+#import dj_database_url
 #from dotenv import (
 #    find_dotenv,
 #    load_dotenv,
@@ -105,13 +106,24 @@ import dj_database_url
 #    'default': dj_database_url.config(conn_max_age=600),
 #}
 
+#PostgreSQLの設定
+import dj_database_url
+from dotenv import (
+    find_dotenv,
+    load_dotenv,
+)
+load_dotenv(find_dotenv())
 DATABASES = {
-    'default': dj_database_url.config(
-        # Feel free to alter this value to suit your needs.
-        default='postgresql://postgres:postgres@localhost:5432/mysite',
-        conn_max_age=600
-    )
+    'default': dj_database_url.config(conn_max_age=600),
 }
+
+#DATABASES = {
+#    'default': dj_database_url.config(
+#        # Feel free to alter this value to suit your needs.
+#        default='postgresql://postgres:postgres@localhost:5432/mysite',
+#        conn_max_age=600
+#    )
+#}
 
 
 # Password validation
@@ -151,7 +163,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = str(BASE_DIR / "staticfiles")
+#STATIC_ROOT = str(BASE_DIR / "staticfiles")
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STRAGE = "whitenoise.strage.CompressedManifestStaticFilesStorage"
 
 
