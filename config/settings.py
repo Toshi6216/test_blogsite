@@ -96,16 +96,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-##MySQLの設定
-#import dj_database_url
-#from dotenv import (
-#    find_dotenv,
-#    load_dotenv,
-#)
-#load_dotenv(find_dotenv())
-#DATABASES = {
-#    'default': dj_database_url.config(conn_max_age=600),
-#}
+#MySQLの設定
+import dj_database_url
+from dotenv import (
+    find_dotenv,
+    load_dotenv,
+)
+load_dotenv(find_dotenv())
+DATABASES = {
+    'default': dj_database_url.config(conn_max_age=600),
+}
 
 #PostgreSQLの設定
 #import dj_database_url
@@ -118,13 +118,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #    'default': dj_database_url.config(conn_max_age=600),
 #}
 
-#Renderデプロイ用
-import dj_database_url
-DATABASES = {
-    'default': dj_database_url.config(
-                # Feel free to alter this value to suit your needs.        
-                default='postgresql://postgres:postgres@localhost:5432/mydb',        
-                conn_max_age=600    )}
+##Renderデプロイ用
+#import dj_database_url
+#DATABASES = {
+#    'default': dj_database_url.config(
+#                # Feel free to alter this value to suit your needs.        
+#                default='postgresql://postgres:postgres@localhost:5432/mydb',        
+#                conn_max_age=600    )}
 
 
 # Password validation
