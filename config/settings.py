@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-#import dj_database_url
+import dj_database_url
 #from dotenv import (
 #    find_dotenv,
 #    load_dotenv,
