@@ -12,8 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-import environ
-from decouple import config
+#import environ
+#from decouple import config
 from dj_database_url import parse as dburl
 
 
