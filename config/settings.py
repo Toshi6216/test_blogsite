@@ -105,10 +105,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #    'default': dj_database_url.config(conn_max_age=600),
 #}
 
-default_dburl = "sqlite:///" + str(BASE_DIR / "db.sqlite3")
-
 DATABASES = {
-    "default": config("DATABASE_URL", default=default_dburl, cast=dburl),
+    'default': dj_database_url.config(
+        # Feel free to alter this value to suit your needs.
+        default='postgresql://postgres:postgres@localhost:5432/mysite',
+        conn_max_age=600
+    )
 }
 
 
