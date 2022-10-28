@@ -107,23 +107,25 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #}
 
 #PostgreSQLの設定
-import dj_database_url
-from dotenv import (
-    find_dotenv,
-    load_dotenv,
-)
-load_dotenv(find_dotenv())
-DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600),
-}
-
+#import dj_database_url
+#from dotenv import (
+#    find_dotenv,
+#    load_dotenv,
+#)
+#load_dotenv(find_dotenv())
 #DATABASES = {
-#    'default': dj_database_url.config(
-#        # Feel free to alter this value to suit your needs.
-#        default='postgresql://postgres:postgres@localhost:5432/mysite',
-#        conn_max_age=600
-#    )
+#    'default': dj_database_url.config(conn_max_age=600),
 #}
+
+#Renderデプロイ用
+import dj_database_url
+DATABASES = {
+    'default': dj_database_url.config(
+        # Feel free to alter this value to suit your needs.
+        default='postgresql://postgres:postgres@localhost:5432/mysite',
+        conn_max_age=600
+    )
+}
 
 
 # Password validation
