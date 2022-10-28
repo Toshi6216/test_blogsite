@@ -1,16 +1,12 @@
 databases:
-
   - name: django_render_db
-
     databaseName: django_render_db
-
     user: django_user
     region: singapore
     plan: free
 
 services:
   - type: web
-
     name: django_render
     env: python
     region: singapore
