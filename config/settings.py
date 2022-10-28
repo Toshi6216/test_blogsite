@@ -95,16 +95,21 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-import dj_database_url
-from dotenv import (
-    find_dotenv,
-    load_dotenv,
-)
-load_dotenv(find_dotenv())
-DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600),
-}
+#import dj_database_url
+#from dotenv import (
+#    find_dotenv,
+#    load_dotenv,
+#)
+#load_dotenv(find_dotenv())
+#DATABASES = {
+#    'default': dj_database_url.config(conn_max_age=600),
+#}
 
+default_dburl = "sqlite:///" + str(BASE_DIR / "db.sqlite3")
+
+DATABASES = {
+    "default": config("DATABASE_URL", default=default_dburl, cast=dburl),
+}
 
 
 # Password validation
